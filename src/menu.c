@@ -34,7 +34,7 @@ void displayMenu(uint8_t pos, uint8_t options)
 {
     printf("\033[H");
     printf("===================================\n");
-    printf("|| PID Component Calculator v0.2 ||\n");
+    printf("||        PID Wizard v0.1        ||\n");
     printf("===================================\n");
     printf("UP-ARROW | DOWN-ARROW to navigate\n");
     printf("ENTER to select | ESC to exit\n\n");
