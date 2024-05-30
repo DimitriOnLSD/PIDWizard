@@ -1,10 +1,11 @@
 // Function to display the PID component values
-void displayComponents(const PIDComponents *components)
+void displayInformation(PIDComponents *components, PID *pid)
 {
+    uint8_t overshoot[3] = {0, 20, 25};
     char unitC1[3], unitC2[3];
     char unitTi[3], unitTd[3];
     double convertedC1 = components->C1, convertedC2 = components->C2;
-    double convertedTi = components->Ti, convertedTd = components->Td;
+    double convertedTi = pid->Ti, convertedTd = pid->Td;
     convertCapacitance(&convertedC1, unitC1);
     convertCapacitance(&convertedC2, unitC2);
     convertTime(&convertedTi, unitTi);
@@ -21,22 +22,80 @@ void displayComponents(const PIDComponents *components)
     printf("C2: %.2lf %s\n", convertedC2, unitC2);
     printf("#====================#\n");
     printf("\n#===# PID #===#\n");
-    printf("Kp: %.3lf\n", components->Kp);
-    printf("Ki: %.3lf\n", components->Ki);
-    printf("Kd: %.3lf\n", components->Kd);
+    printf("Kp: %.3lf\n", pid->Kp);
+    printf("Ki: %.3lf\n", pid->Ki);
+    printf("Kd: %.3lf\n", pid->Kd);
     printf("Ti: %.3lf %s\n", convertedTi, unitTi);
     printf("Td: %.3lf %s\n", convertedTd, unitTd);
     printf("#=============#\n");
-    printf("\n");
+
+    // Ziegler-Nichols table headers
+    const char headers[][MAX_STRING_TABLE] = {
+        "Overshoot",
+        "Time constant",
+        "Lag time",
+        "Slope",
+        "Steady State",
+        "Critical period",
+        "Critical value"};
+    int columnCount = sizeof(headers) / sizeof(headers[0]);
+
+    // Print title
+    char c = '=';
+    int count = 51;
+    printf("\n#");
+    for (uint8_t i = 0; i < count; i++)
+    {
+        putchar(c);
+    }
+    printf("# Ziegler-Nichols table #");
+    for (uint8_t i = 0; i < count - 1; i++)
+    {
+        putchar(c);
+    }
+    printf("#\n");
+
+    // Print header
+    printTableHeader(headers, columnCount);
+
+    // Print rows
+    for (uint8_t i = 0; i < 3; i++)
+    {
+        zieglerNicholsTuning(pid, overshoot[i]);
+
+        // Prepare data for the table
+        char data[1][7][MAX_STRING_TABLE]; // Single row with 7 columns
+        snprintf(data[0][0], MAX_STRING_TABLE, "%d%%", overshoot[i]);
+        snprintf(data[0][1], MAX_STRING_TABLE, "%.3lf", pid->T);
+        snprintf(data[0][2], MAX_STRING_TABLE, "%.3lf", pid->L);
+        snprintf(data[0][3], MAX_STRING_TABLE, "%.3lf", pid->R);
+        if (overshoot[i] == 25)
+        {
+            snprintf(data[0][4], MAX_STRING_TABLE, "%s", "-");
+            snprintf(data[0][5], MAX_STRING_TABLE, "%.3lf", pid->Tcr);
+            snprintf(data[0][6], MAX_STRING_TABLE, "%.3lf", pid->Kcr);
+        }
+        else
+        {
+            snprintf(data[0][4], MAX_STRING_TABLE, "%.3lf", pid->K);
+            snprintf(data[0][5], MAX_STRING_TABLE, "%s", "-");
+            snprintf(data[0][6], MAX_STRING_TABLE, "%s", "-");
+        }
+
+        printTableRow(data[0], columnCount);
+    }
+    // Print footer
+    printTableFooter(headers, columnCount);
 }
 
+// Function to display the main menu and selection
 void displayMenu(uint8_t pos, uint8_t options)
 {
-    printf("\033[H");
+    printf("\033[H"); // Cursor to top-left corner
     printf("===================================\n");
-    printf("||        PID Wizard v0.1        ||\n");
+    printf("||       PIDWizard v0.2.0        ||\n");
     printf("===================================\n");
-    printf("UP-ARROW | DOWN-ARROW to navigate\n");
+    printf("UP-ARROW & DOWN-ARROW to navigate\n");
     printf("ENTER to select | ESC to exit\n\n");
     printf("Choose any of the following:\n\n");
     for (int j = 0; j < pos; j++)
@@ -74,11 +133,55 @@ bool readKeyboard(int8_t *pos, uint8_t options)
 bool getInput(const char *prompt, double *value)
 {
     printf("%s", prompt);
-    while (scanf("%lf", value) != 1)
+    fflush(stdin);
+    while (scanf("%lf", value) == isdigit(*value))
     {
-        while (getchar() != '\n')
-            ; // Clear the input buffer
-        printf("Invalid input. %s", prompt);
+        while (getchar() != '\n'); // Clear the input buffer
+        printf("\nInvalid input. %s", prompt);
     }
     return true;
+}
+
+// Function to print a table header
+void printTableHeader(const char headers[][MAX_STRING_TABLE], int columnCount)
+{
+    printf("#");
+    for (int i = 0; i < columnCount; i++)
+    {
+        printf("==================");
+    }
+    printf("#\n");
+
+    for (int i = 0; i < columnCount; i++)
+    {
+        printf("%-19s", headers[i]);
+    }
+    printf("\n");
+
+    printf("#");
+    for (int i = 0; i < columnCount; i++)
+    {
+        printf("==================");
+    }
+    printf("#\n");
+}
+
+void printTableFooter(const char headers[][MAX_STRING_TABLE], int columnCount)
+{
+    printf("#");
+    for (int i = 0; i < columnCount; i++)
+    {
+        printf("==================");
+    }
+    printf("#\n");
+}
+
+// Function to print a table row
+void printTableRow(const char row[][MAX_STRING_TABLE], int columnCount)
+{
+    for (int i = 0; i < columnCount; i++)
+    {
+        printf("%-19s", row[i]);
+    }
+    printf("\n");
 }
