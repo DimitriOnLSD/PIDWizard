@@ -3,10 +3,11 @@
 This tool simplifies the design and analysis of PID controllers. It calculates the necessary components (resistors, capacitors, etc.) for a given set of PID parameters (Kp, Ki, Kd) in a series PID controller configuration. Additionally, it can determine the PID parameters (Kp, Ki, Kd) along with the integral time (Ti) and derivative time (Td) based on the existing circuit components. This makes it an invaluable resource for both designing new PID controllers and analyzing existing ones.
 
 ## Features
-- Calculate component values for a given set of PID parameters.
+- Calculate circuit component values for a given set of PID parameters.
 - Determine PID parameters based on existing circuit components.
 - Supports both series and parallel PID controller configurations.
 - Provides a clear layout of component placements.
+- Includes Ziegler-Nichols Table for additional information.
 
 ## Installation
 To use this tool, clone the repository and compile the source code:
