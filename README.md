@@ -6,7 +6,7 @@ This tool simplifies the design and analysis of PID controllers. It calculates t
 - Calculate circuit component values for a given set of PID parameters.
 - Determine PID parameters based on existing circuit components:
     - Proportional-integral-derivative gains.
-    - Integral-derivatime time.
+    - Integral-derivative time.
     - Ziegler-Nichols table with 0%, 20% and 25% overshoot.
 - Supports both series and parallel PID controller configurations.
 - Provides a clear layout of component placements.
