@@ -3,6 +3,9 @@
 
 #define MAX_STRING_TABLE 20
 
+// Program verion
+char version[17] = "PIDWizard v0.2.1";
+
 // Structure to hold the component values for the PID calculator
 typedef struct
 {
@@ -14,6 +17,7 @@ typedef struct
     double C2;
 } PIDComponents;
 
+// Structure to hold the PID values
 typedef struct
 {
     double Kp;
@@ -29,15 +33,11 @@ typedef struct
     double Kcr; // Critical value
 } PID;
 
-char str[][100] = {"Calculate gains, integral-derivative time from circuit components",
-                   "Determine circuit components for given Kp, Ki, Kd, R3, C1, and C2",
+// Menu string
+char str[][100] = {"Calculate K-pid, integral-derivative time from circuit components",
+                   "Determine circuit components for given K-pid, R3, C1 and C2",
+                   "Determine circuit components for given K-pid, R2, R4 and assuming C1=C2",
                    "Exit"};
-
-// char str[][100] = {"Calculate gains, integral-derivative time from circuit components",
-//                    "Determine circuit components for given Kp, Ki, Kd, R3, C1, and C2",
-//                    "Determine circuit components for given Kp, Ki, Kd, Ti, Td, and XX",
-//                    "Determine circuit components Assuming C1=C2",
-//                    "Exit"};
 
 int overflow(int var, int min, int max);
 bool readKeyboard(int8_t *pos, uint8_t options);
@@ -51,9 +51,11 @@ void convertTime(double *time, char *unit);
 void printTableHeader(const char headers[][MAX_STRING_TABLE], int columnCount);
 void printTableFooter(const char headers[][MAX_STRING_TABLE], int columnCount);
 void printTableRow(const char row[][MAX_STRING_TABLE], int columnCount);
-double calculateR1(double C1, double Kp, double Ki, double Kd);
+
+double calculateR1(uint8_t type, double R2, double R3, double R4, double C1, double C2, double Kp, double Ki, double Kd, double Ti);
 double calculateR2(double R1, double C1, double C2, double Ki, double Kd);
-double calculateR4(double R2, double R3, double C1, double Kd);
+double calculateR3(double R1, double R4, double C2, double Ki);
+double calculateR4(uint8_t type, double R1, double R2, double R3, double C1, double C2, double Ki, double Kd);
 double calculateKp(double R1, double R2, double R3, double R4, double C1, double C2);
 double calculateKi(double R1, double R3, double R4, double C2);
 double calculateKd(double R2, double R3, double R4, double C1);

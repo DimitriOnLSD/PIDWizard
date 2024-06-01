@@ -4,10 +4,12 @@ This tool simplifies the design and analysis of PID controllers. It calculates t
 
 ## Features
 - Calculate circuit component values for a given set of PID parameters.
-- Determine PID parameters based on existing circuit components.
+- Determine PID parameters based on existing circuit components:
+    - Proportional-integral-derivative gains.
+    - Integral-derivatime time.
+    - Ziegler-Nichols table with 0%, 20% and 25% overshoot.
 - Supports both series and parallel PID controller configurations.
 - Provides a clear layout of component placements.
-- Includes Ziegler-Nichols Table for additional information.
 
 ## Installation
 To use this tool, clone the repository and compile the source code:
@@ -40,6 +42,20 @@ Here's an example of how you might use the tool:
 ![image](https://github.com/DimitriOnLSD/PIDWizard/assets/100768973/3591ba36-322c-4d22-afc0-291ccc869c3a)
 
 - Receive the calculated output for your PID controller design.
+
+# Important Notes
+**Original method:** When using the original method of determining PID components through *Kp, Ki, Kd, R3, C1 and C2*, if $(Kp < 2 * sqrt(Ti * Td)), the method will not work correctly. You will receive an error message:
+```
+Using this method, 4*Ki*Kd should not be greater than Kp squared.
+```
+Ensure that this condition is met to avoid errors.
+
+**Matching R2 with C:** When using the *Determine circuit components for given K-pid, R2, R4, and assuming C1=C2* option, ensure that the larger the R2 resistor is, the smaller the capacitor C should be. For example:
+
+For a 1k resistor for R2, select a capacitor smaller than 1mF; Ratio = 1
+For a 22k resistor for R2, select a capacitor smaller than 470uF. Ratio = 1.03
+For a 330k resistor for R2, select a capacitor smaller than 3.3uF. Ratio = 0.99
+Maintaining this ratio ensures that R2 * C2 gives a value close to one, which helps in achieving optimal performance in the PID controller. If this is not achievable, increasing integral-time through with larger proportional-gain and/or smaller integral-gain should also work, since it will increase the ratio cap.
 
 ## Example
 Below is an example of the circuit with indications of the resistor and capacitor placements. This example provides a clear layout, helping you to understand the placement and designation of each component within the PID controller circuit.

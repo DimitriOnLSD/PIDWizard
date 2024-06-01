@@ -11,6 +11,7 @@ void displayInformation(PIDComponents *components, PID *pid)
     convertTime(&convertedTi, unitTi);
     convertTime(&convertedTd, unitTd);
 
+    // Print Resistors, Capacitors and basic PID values 
     printf("\n#===# RESISTORS #===#\n");
     printf("R1: %.0lf\n", components->R1);
     printf("R2: %.0lf\n", components->R2);
@@ -93,10 +94,11 @@ void displayMenu(uint8_t pos, uint8_t options)
 {
     printf("\033[H"); // Cursor to top-left corner
     printf("===================================\n");
-    printf("||       PIDWizard v0.2.0        ||\n");
+    printf("||       %s        ||\n", version);
     printf("===================================\n");
     printf("UP-ARROW & DOWN-ARROW to navigate\n");
     printf("ENTER to select | ESC to exit\n\n");
+    printf("Additional help and an example series PID circuit is available here:\nhttps://github.com/DimitriOnLSD/PIDWizard.git\n\n");
     printf("Choose any of the following:\n\n");
     for (int j = 0; j < pos; j++)
         printf("%s\n", str[j]);
@@ -110,6 +112,7 @@ int overflow(int var, int min, int max)
     return (var > max) ? min : ((var < min) ? max : var);
 }
 
+// Function to navigate the menu
 bool readKeyboard(int8_t *pos, uint8_t options)
 {
     switch (_getch())
@@ -166,6 +169,7 @@ void printTableHeader(const char headers[][MAX_STRING_TABLE], int columnCount)
     printf("#\n");
 }
 
+// Function to print a table footer
 void printTableFooter(const char headers[][MAX_STRING_TABLE], int columnCount)
 {
     printf("#");

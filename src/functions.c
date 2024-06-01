@@ -103,9 +103,43 @@ void zieglerNicholsTuning(PID *pid, uint8_t overshoot)
     }
 }
 
-double calculateR1(double C1, double Kp, double Ki, double Kd) { return (Kp - sqrt(pow(Kp, 2) - 4 * Ki * Kd)) / (2 * C1 * Ki); }
-double calculateR2(double R1, double C1, double C2, double Ki, double Kd) { return Kd / (Ki * R1 * C1 * C2); }
-double calculateR4(double R2, double R3, double C1, double Kd) { return (Kd * R3) / (R2 * C1); }
+double calculateR1(uint8_t type, double R2, double R3, double R4, double C1, double C2, double Kp, double Ki, double Kd, double Ti) 
+{ 
+    switch(type)
+    {
+        case 0:
+            return (R4 * Ti) / (Kp * R3 * C2);
+        case 1:
+            return (Kd * Ti) / (Kp * R2 * pow(C1, 2));
+        case 2:
+            return (Kp - sqrt(pow(Kp, 2) - 4 * Ki * Kd)) / (2 * C1 * Ki);
+        case 3:
+            return (Ti - R2 * C2) / C1;
+        case 4:
+            return ((Kp / Ki) - R2 * C2) / C1;
+    }
+}
+double calculateR2(double R1, double C1, double C2, double Ki, double Kd) 
+{ 
+    return Kd / (Ki * R1 * C1 * C2); 
+}
+
+double calculateR3(double R1, double R4, double C2, double Ki)
+{ 
+    return R4 / (Ki * R1 * C2); 
+}
+
+double calculateR4(uint8_t type, double R1, double R2, double R3, double C1, double C2, double Ki, double Kd) 
+{
+    switch(type)
+    {
+        case 0:
+            return Ki * R1 * R3 * C2;
+        case 2:
+            return (Kd * R3) / (R2 * C1);  
+    } 
+}
+
 double calculateKp(double R1, double R2, double R3, double R4, double C1, double C2) { return R4 * (R1 * C1 + R2 * C2) / (R1 * R3 * C2); }
 double calculateKi(double R1, double R3, double R4, double C2) { return R4 / (R1 * R3 * C2); }
 double calculateKd(double R2, double R3, double R4, double C1) { return R2 * R4 * C1 / R3; }
