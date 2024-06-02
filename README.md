@@ -18,30 +18,49 @@ git clone https://github.com/DimitriOnLSD/PIDWizard.git
 cd PIDWizard
 make
 ```
+Additionally, you have other options for obtaining and compiling the source code:
+
+1. GitHub Desktop:
+    - Open GitHub Desktop.
+    - Clone the repository by pasting the URL https://github.com/DimitriOnLSD/PIDWizard.git.
+    - Navigate to the cloned repository on your local machine.
+    - Compile the source code using any C compiler, such as Visual Studio.
+
+2. Download ZIP File:
+    - Go to the PIDWizard GitHub repository.
+    - Click the "Code" button and select "Download ZIP".
+    - Extract the downloaded ZIP file.
+    - Navigate to the extracted folder.
+    - Compile the source code using any C compiler, such as Visual Studio.
+
+3. Download the Release:
+    - Visit the [Releases](https://github.com/DimitriOnLSD/PIDWizard/releases) page of the PIDWizard GitHub repository.
+    - Download the latest release.
+    - The release is an executable file, a simple click-and-run.
 ## Usage
-To run the tool, use the following command:
-```
-./pid_calculator
-```
+This tool was not designed to run on Git, as it contains CMD commands. 
+
+To run the tool, simply compile the ```main.c``` using any compiler. The release version is a simple executable file.
+
 Follow the on-screen instructions to choose your desired operation:
 
-Determine PID Parameters: Input the values of R1, R2, R3, R4, C1, and C2 to get the corresponding Kp, Ki, Kd, Ti, and Td of the circuit.
+* Determine PID Parameters: 
+    - Input the values of R1, R2, R3, R4, C1, and C2 to get the corresponding Kp, Ki, Kd, Ti, and Td of the circuit.
 
-Calculate Component Values: Input the desired Kp, Ki, and Kd values along with the values of R3, C1, and C2 to get the required R1, R2, and R4 component values.
+* Calculate Component Values: 
+    - Input the desired Kp, Ki, and Kd values.
+        - Determine R1, R2 and R4 by giving R3, C1 and C2.
+        - Determine R1, R3 by givinig R2, R4 and C1=C2.
 
 Ensure to provide accurate measurements and values to obtain precise results.
 
 Here's an example of how you might use the tool:
 
-- Select whether you want to determine PID parameters or calculate component values.
-
-![image](https://github.com/DimitriOnLSD/PIDWizard/assets/100768973/bf99af9f-e848-44bd-a27b-9515fe5453ca)
-
-- Follow the prompts to input the necessary values.
-
-![image](https://github.com/DimitriOnLSD/PIDWizard/assets/100768973/3591ba36-322c-4d22-afc0-291ccc869c3a)
-
-- Receive the calculated output for your PID controller design.
+1. Select whether you want to determine PID parameters or calculate component values.
+![image](https://github.com/DimitriOnLSD/PIDWizard/assets/100768973/74bc2725-5957-4cb7-b45c-829ab5d603b8)
+2. Follow the prompts to input the necessary values.
+3. Receive the calculated output for your PID controller design.
+![image](https://github.com/DimitriOnLSD/PIDWizard/assets/100768973/49ccaee1-448d-4f84-9a36-c635340730fc)
 
 # Important Notes
 **Original method:** When using the original method of determining PID components through *Kp, Ki, Kd, R3, C1 and C2*, if $(K_p < 2\sqrt{T_i T_d})$, the method will not work correctly. You will receive an error message:
