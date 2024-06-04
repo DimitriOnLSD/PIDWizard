@@ -45,11 +45,12 @@ To run the tool, simply compile the ```main.c``` using any compiler. The release
 Follow the on-screen instructions to choose your desired operation:
 
 * Determine PID Parameters: 
-    - Input the values of R1, R2, R3, R4, C1, and C2 to get the corresponding Kp, Ki, Kd, Ti, and Td of the circuit.
+    - Input the values of all components present to get the corresponding Kp, Ki, Kd, Ti, and Td of the circuit.
 
 * Calculate Component Values: 
     - Input the desired Kp, Ki, and Kd values.
         - Determine R1, R2 and R4 by giving R3, C1 and C2.
+        - Determine R4, C1 and C2 by givinig R1, R2 and R3.
         - Determine R1, R3 by givinig R2, R4 and C1=C2.
 
 Ensure to provide accurate measurements and values to obtain precise results.
@@ -63,13 +64,13 @@ Here's an example of how you might use the tool:
 ![image](https://github.com/DimitriOnLSD/PIDWizard/assets/100768973/49ccaee1-448d-4f84-9a36-c635340730fc)
 
 # Important Notes
-**Original method:** When using the original method of determining PID components through *Kp, Ki, Kd, R3, C1 and C2*, if $(K_p < 2\sqrt{T_i T_d})$, the method will not work correctly. You will receive an error message:
+**R3/C1/C2 series-circuit method:** When using the original method of determining PID components through *Kp, Ki, Kd, R3, C1 and C2*, if $(K_p < 2\sqrt{T_i T_d})$, the method will not work correctly. You will receive an error message:
 ```
 Using this method, ( 2 * sqrt(Ti * Td) ) should not be greater than Kp.
 ```
 Ensure that this condition is met to avoid errors.
 
-**Matching R2 with C:** When using the *Determine circuit components for given K-pid, R2, R4, and assuming C1=C2* option, ensure that the larger the R2 resistor is, the smaller the capacitor C should be. For example:
+**Matching R2 with C in series-circuit:** When using the *Determine circuit components for given K-pid, R2, R4, and assuming C1=C2* option, ensure that the larger the R2 resistor is, the smaller the capacitor C should be. For example:
 
 - For a 1k resistor for R2, select a capacitor smaller than 1mF. Ratio = 1
 - For a 22k resistor for R2, select a capacitor smaller than 470uF. Ratio = 1.03
@@ -78,9 +79,12 @@ Ensure that this condition is met to avoid errors.
 Maintaining this ratio ensures that R2 * C2 gives a value close to one, which helps in achieving optimal performance in the PID controller. If this is not achievable, increasing integral-time through with larger proportional-gain and/or smaller integral-gain should also work, since it will increase the ratio cap.
 
 ## Example
-Below is an example of the circuit with indications of the resistor and capacitor placements. This example provides a clear layout, helping you to understand the placement and designation of each component within the PID controller circuit.
+Below are examples of series and parallel circuits with indications of the resistor and capacitor placements. These examples provide clear layouts, helping you understand the placement and designation of each component within the PID controller circuits. Please note that the R resistor is arbitrary and should be the same for all references.
 
+### Series circuit
 ![image](https://github.com/DimitriOnLSD/PIDWizard/assets/100768973/95bfcb31-0f98-40b2-b86a-73815d24fff3)
+### Parallel circuit
+![image](https://github.com/DimitriOnLSD/PIDWizard/assets/100768973/eb7c885c-006e-49ca-afb1-7e85c5569415)
 
 ## Input Parameters
 Please note that the input to this tool takes into account the difference between two voltages. Ensure that your voltage measurements reflect this differential to obtain accurate calculations for the PID parameters and corresponding circuit components.
