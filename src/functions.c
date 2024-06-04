@@ -103,45 +103,156 @@ void zieglerNicholsTuning(PID *pid, uint8_t overshoot)
     }
 }
 
-double calculateR1(uint8_t type, double R2, double R3, double R4, double C1, double C2, double Kp, double Ki, double Kd, double Ti) 
-{ 
-    switch(type)
+double calculateR1(bool type, uint8_t method, double R2, double R3, double R4, double C1, double C2, double Kp, double Ki, double Kd)
+{
+    if (!type)
     {
+        switch (method)
+        {
         case 0:
-            return (R4 * Ti) / (Kp * R3 * C2);
-        case 1:
-            return (Kd * Ti) / (Kp * R2 * pow(C1, 2));
-        case 2:
             return (Kp - sqrt(pow(Kp, 2) - 4 * Ki * Kd)) / (2 * C1 * Ki);
-        case 3:
-            return (Ti - R2 * C2) / C1;
-        case 4:
+        case 1:
             return ((Kp / Ki) - R2 * C2) / C1;
+        }
+    }
+    else
+    {
+        return 1 / (Ki * C2);
     }
 }
-double calculateR2(double R1, double C1, double C2, double Ki, double Kd) 
-{ 
-    return Kd / (Ki * R1 * C1 * C2); 
-}
-
-double calculateR3(double R1, double R4, double C2, double Ki)
-{ 
-    return R4 / (Ki * R1 * C2); 
-}
-
-double calculateR4(uint8_t type, double R1, double R2, double R3, double C1, double C2, double Ki, double Kd) 
+double calculateR2(bool type, uint8_t method, double R1, double R3, double R4, double C1, double C2, double Kp, double Ki, double Kd)
 {
-    switch(type)
+    if (!type)
     {
+        switch (method)
+        {
+        case 0:
+            return Kd / (Ki * R1 * C1 * C2);
+        case 1:
+            return 0;
+        }
+    }
+    else
+    {
+        return Kd / C1;
+    }
+}
+double calculateR3(bool type, uint8_t method, double R1, double R2, double R4, double C1, double C2, double Kp, double Ki, double Kd)
+{
+    if (!type)
+    {
+        switch (method)
+        {
+        case 0:
+            return 0;
+        case 1:
+            return R4 / (Ki * R1 * C2);
+        }
+    }
+    else
+    {
+        return R4 / Kp;
+    }
+}
+double calculateR4(bool type, uint8_t method, double R1, double R2, double R3, double C1, double C2, double Kp, double Ki, double Kd)
+{
+    if (!type)
+    {
+        switch (method)
+        {
         case 0:
             return Ki * R1 * R3 * C2;
-        case 2:
-            return (Kd * R3) / (R2 * C1);  
-    } 
+        case 1:
+            return (Kd * R3) / (R2 * C1);
+        }
+    }
+    else
+    {
+        return Kp * R3;
+    }
+}
+double calculateC1(bool type, uint8_t method, double R1, double R2, double R3, double R4, double C2, double Kp, double Ki, double Kd)
+{
+    if (!type)
+    {
+        switch (method)
+        {
+        case 0:
+            return 0;
+        case 1:
+            return 0;
+        }
+    }
+    else
+    {
+        return Kp / R2;
+    }
+}
+double calculateC2(bool type, uint8_t method, double R1, double R2, double R3, double R4, double C1, double Kp, double Ki, double Kd)
+{
+    if (!type)
+    {
+        switch (method)
+        {
+        case 0:
+            return 0;
+        case 1:
+            return 0;
+        }
+    }
+    else
+    {
+        return 1 / (R1 * Ki);
+    }
 }
 
-double calculateKp(double R1, double R2, double R3, double R4, double C1, double C2) { return R4 * (R1 * C1 + R2 * C2) / (R1 * R3 * C2); }
-double calculateKi(double R1, double R3, double R4, double C2) { return R4 / (R1 * R3 * C2); }
-double calculateKd(double R2, double R3, double R4, double C1) { return R2 * R4 * C1 / R3; }
-double calculateTi(double R1, double R2, double C1, double C2) { return (R1 * C1 + R2 * C2); }
-double calculateTd(double R1, double R2, double C1, double C2) { return (R1 * C1 * R2 * C2) / (R1 * C1 + R2 * C2); }
+double calculateKp(uint8_t type, double R1, double R2, double R3, double R4, double C1, double C2)
+{
+    switch (type)
+    {
+    case 0:
+        return R4 * (R1 * C1 + R2 * C2) / (R1 * R3 * C2);
+    case 1:
+        return R4 / R3;
+    }
+}
+double calculateKi(uint8_t type, double R1, double R3, double R4, double C2)
+{
+    switch (type)
+    {
+    case 0:
+        return R4 / (R1 * R3 * C2);
+    case 1:
+        return 1 / (R1 * C2);
+    }
+}
+double calculateKd(uint8_t type, double R2, double R3, double R4, double C1)
+{
+    switch (type)
+    {
+    case 0:
+        return R2 * R4 * C1 / R3;
+    case 1:
+        return R2 * C1;
+    }
+}
+double calculateTi(uint8_t type, double R1, double R2, double C1, double C2)
+{
+    switch (type)
+    {
+    case 0:
+        return (R1 * C1 + R2 * C2);
+    case 1:
+        return R1 * C2;
+    }
+}
+double calculateTd(uint8_t type, double R1, double R2, double C1, double C2)
+{
+    switch (type)
+    {
+    case 0:
+        return (R1 * C1 * R2 * C2) / (R1 * C1 + R2 * C2);
+    case 1:
+        return R2 * C1;
+    }
+}
